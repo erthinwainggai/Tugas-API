@@ -1,0 +1,41 @@
+/* Stylesheet */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f1ecec;
+}
+
+h1 {
+  text-align: block;
+}
+
+.produk-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.produk {
+  width: 30%;
+  float: left;
+  text-align: left;
+}
+
+.produk img {
+  width: 50%;
+  display: center;
+  height: auto;
+  border-radius: 10%;
+}
+
+.keranjang {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.formPembayaran {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}

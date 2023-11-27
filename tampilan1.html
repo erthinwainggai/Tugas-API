@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Management</title>
+    <link rel="stylesheet" href="tampilan.css" />
+  </head>
+  <body>
+    <h1>Product Management</h1>
+
+    <!-- Form untuk menambah produk -->
+    <form id="add-product-form">
+      <input type="text" id="product-id" placeholder="Product ID" />
+      <input type="text" id="product-name" placeholder="Product Name" />
+      <input type="number" id="product-price" placeholder="Product Price" />
+      <input type="text" id="product-image" placeholder="Product Image URL" />
+      <!-- Tambahkan input untuk URL gambar -->
+      <button type="button" onclick="addProduct()">Add Product</button>
+    </form>
+
+    <!-- Daftar produk akan ditampilkan di sini -->
+    <ul id="product-list">
+      <!-- Daftar produk akan ditampilkan di sini -->
+    </ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Fungsi untuk menampilkan produk
+      function showProducts() {
+        axios
+          .get("http://localhost:5000/products")
+          .then((response) => {
+            const products = response.data;
+            const productList = document.getElementById("product-list");
+
+            productList.innerHTML = "";
+            products.forEach((product) => {
+              // Buat elemen list baru untuk setiap produk
+              const listItem = document.createElement("li");
+
+              // Buat elemen gambar untuk produk
+              const productImage = document.createElement("img");
+              productImage.src = product.imageUrl; // Ganti 'imageUrl' dengan properti yang menyimpan URL gambar produk
+
+              // Buat elemen untuk menampilkan nama dan harga produk
+              const productInfo = document.createElement("div");
+              productInfo.innerText = `${product.name} - $${product.price}`;
+
+              // Buat tombol delete
+              const deleteButton = document.createElement("button");
+              deleteButton.innerText = "Delete";
+              deleteButton.onclick = function () {
+                deleteProduct(product.id); // Panggil fungsi deleteProduct saat tombol delete diklik
+              };
+
+              // Buat tombol update (PUT)
+              const updateButton = document.createElement("button");
+              updateButton.innerText = "Update (PUT)";
+              updateButton.onclick = function () {
+                const updatedData = {
+                  // Persiapkan data yang akan diperbarui
+                  name: "Updated Name",
+                  price: 99.99,
+                  imageUrl: "https://updated-image-url.com",
+                  // Tambahkan properti yang ingin diperbarui
+                };
+                updateProduct(product.id, updatedData); // Panggil fungsi updateProduct saat tombol update diklik
+              };
+
+              // Gabungkan elemen gambar, info produk, dan tombol ke dalam elemen list
+              listItem.appendChild(productImage);
+              listItem.appendChild(productInfo);
+              listItem.appendChild(deleteButton);
+              listItem.appendChild(updateButton);
+
+              productList.appendChild(listItem); // Tambahkan elemen list ke dalam daftar produk
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching products", error);
+          });
+      }
+
+      // Fungsi untuk menambah produk baru
+      function addProduct() {
+        const productId = document.getElementById("product-id").value;
+        const productName = document.getElementById("product-name").value;
+        const productPrice = document.getElementById("product-price").value;
+        const productImage = document.getElementById("product-image").value; // Ambil nilai URL gambar
+
+        axios
+          .post("http://localhost:5000/products", {
+            id: parseInt(productId),
+            name: productName,
+            price: productPrice,
+            imageUrl: productImage, // Sertakan URL gambar dalam data produk yang dikirimkan ke server
+          })
+          .then(() => {
+            showProducts(); // Setelah menambah produk, tampilkan kembali daftar produk
+          })
+          .catch((error) => {
+            console.error("Error adding product", error);
+          });
+      }
+
+      // Fungsi untuk menghapus produk berdasarkan ID
+      function deleteProduct(productId) {
+        axios
+          .delete(`http://localhost:5000/products/${productId}`)
+          .then(() => {
+            showProducts(); // Setelah menghapus produk, tampilkan kembali daftar produk
+          })
+          .catch((error) => {
+            console.error(`Error deleting product with ID ${productId}`, error);
+          });
+      }
+
+      // Fungsi untuk memperbarui produk berdasarkan ID dengan metode PUT
+      function updateProduct(productId, updatedData) {
+        axios
+          .put(`http://localhost:5000/products/${productId}`, updatedData)
+          .then(() => {
+            showProducts(); // Setelah memperbarui produk, tampilkan kembali daftar produk
+          })
+          .catch((error) => {
+            console.error(`Error updating product with ID ${productId}`, error);
+          });
+      }
+
+      // Fungsi untuk melakukan perubahan sebagian data produk
+      function partiallyUpdateProduct(productId, updatedFields) {
+        axios
+          .patch(`http://localhost:5000/products/${productId}`, updatedFields)
+          .then(() => {
+            showProducts(); // Setelah memperbarui data produk, tampilkan kembali daftar produk
+          })
+          .catch((error) => {
+            console.error(`Error updating product with ID ${productId}`, error);
+          });
+      }
+
+      // Memanggil fungsi showProducts() saat halaman dimuat
+      showProducts();
+    </script>
+  </body>
+</html>

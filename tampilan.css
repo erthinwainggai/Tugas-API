@@ -1,0 +1,7 @@
+/* CSS untuk mengatur ukuran gambar produk */
+#product-list img {
+  width: 200px;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Toko Online</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Selamat Datang di Toko Kami</h1>
+
+    <div class="produk-container">
+      <!-- Produk 1 -->
+      <div class="produk">
+        <img src="img/iphone-15.jpg" alt="Produk 1" />
+        <h2>iPhone 15 Pro</h2>
+        <p>Harga:Rp20.999.000</p>
+        <p>Deskripsi:Warna Titanium Alami, 128GB</p>
+        <button onclick="tambahKeKeranjang('iPhone 15 Pro', 20999000)">
+          Tambah ke Keranjang
+        </button>
+      </div>
+
+      <!-- Produk 2 -->
+      <div class="produk">
+        <img src="img/iphone-14.jpg" alt="Produk 2" />
+        <h2>iPhone 14 Pro</h2>
+        <p>Harga:Rp19.999.000</p>
+        <p>Deskripsi:Warna Space Black, 128GB</p>
+        <button onclick="tambahKeKeranjang('iPhone 14 Pro', 19999000)">
+          Tambah ke Keranjang
+        </button>
+      </div>
+
+      <!-- Produk 3 -->
+      <div class="produk">
+        <img src="img/iphone-13.jpg" alt="Produk 3" />
+        <h2>iPhone 13 Pro</h2>
+        <p>Harga:Rp17.470.000</p>
+        <p>Deskripsi:Warna Hijau Alpen, 128GB</p>
+        <button onclick="tambahKeKeranjang('iPhone 13 Pro', 17470000)">
+          Tambah ke Keranjang
+        </button>
+      </div>
+    </div>
+
+    <!-- Keranjang Belanja -->
+    <div class="keranjang">
+      <h2>Keranjang Belanja</h2>
+      <ul id="listKeranjang">
+        <!-- Isi keranjang belanja akan muncul di sini -->
+      </ul>
+      <p>Total: <span id="totalHarga">0</span></p>
+      <button onclick="prosesPembayaran()">Proses Pembayaran</button>
+    </div>
+
+    <!-- Formulir Pembayaran -->
+    <div class="formPembayaran" id="formPembayaran" style="display: none">
+      <h2>Formulir Pembayaran</h2>
+      <input type="text" id="nama" placeholder="Nama" />
+      <input type="text" id="alamat" placeholder="Alamat" />
+      <select id="metodePembayaran">
+        <option value="cod">COD (Cash On Delivery)</option>
+        <option value="transfer">Transfer</option>
+      </select>
+      <button onclick="selesaiPembayaran()">Selesai</button>
+    </div>
+
+    <script>
+      fetch("http://localhost:5000/products") // Ganti URL dengan URL API Flask Anda
+        .then((response) => response.json())
+        .then((data) => {
+          const produkContainer = document.getElementById("produk-container");
+          data.forEach((product) => {
+            const produkDiv = document.createElement("div");
+            produkDiv.classList.add("produk");
+            produkDiv.innerHTML = `
+              <img src="img/${product.name
+                .toLowerCase()
+                .replace(" ", "-")}.jpg" alt="${product.name}" />
+              <h2>${product.name}</h2>
+              <p>Harga: Rp${product.price}</p>
+              <!-- Tambahkan elemen HTML sesuai kebutuhan -->
+            `;
+            produkContainer.appendChild(produkDiv);
+          });
+        })
+        .catch((error) => console.error("Error:", error));
+    </script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
